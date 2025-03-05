@@ -2,32 +2,34 @@ async function searchVideos() {
     const keyword = document.getElementById('searchInput').value;
     const videoResults = document.getElementById('videoResults');
 
-    if (!keyword) {
-        alert('Please enter a search keyword!');
-        return;
-    }
+    // Clear the previous search results
+    videoResults.innerHTML = '';
 
     try {
-        // API endpoint for searching videos based on the keyword
-        const apiUrl = `https://phub-api.herokuapp.com/search?keyword=${encodeURIComponent(keyword)}&limit=5`;
-        
-        // Fetch results from PHub API
-        const response = await fetch(apiUrl);
+        // URL for fetching trending videos from Redgifs
+        const apiUrl = `https://api.adultdatalink.com/redgifs/trending?parameter=gif`;
+
+        // If there's a keyword, add it as a filter (you can adjust this based on the actual API behavior)
+        const searchUrl = keyword ? `${apiUrl}&tags=${encodeURIComponent(keyword)}` : apiUrl;
+
+        // Fetch data from the API
+        const response = await fetch(searchUrl);
         const data = await response.json();
 
-        if (data && data.results) {
-            // Clear any previous results
-            videoResults.innerHTML = ''; 
-
+        if (data && data.length > 0) {
             // Loop through the results and create HTML to display them
-            data.results.forEach(result => {
+            data.forEach(result => {
                 const videoCard = document.createElement('div');
                 videoCard.classList.add('video-card');
+
+                // Video card content
                 videoCard.innerHTML = `
-                    <a href="${result.url}" target="_blank">
-                        <img src="${result.thumbnail}" alt="${result.title}" />
-                        <h3>${result.title}</h3>
+                    <a href="${result.urls.web_url}" target="_blank">
+                        <img src="${result.urls.thumbnail}" alt="${result.username}" />
+                        <h3>${result.username} - ${result.likes} Likes</h3>
                     </a>
+                    <p>Tags: ${result.tags.join(', ')}</p>
+                    <a href="${result.urls.embed_url}" target="_blank">Watch Video</a>
                 `;
                 videoResults.appendChild(videoCard);
             });
