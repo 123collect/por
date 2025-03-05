@@ -1,19 +1,15 @@
-async function searchVideos() {
-    const keyword = document.getElementById('searchInput').value;
+async function fetchTrendingVideos() {
     const videoResults = document.getElementById('videoResults');
 
-    // Clear the previous search results
+    // Clear previous results
     videoResults.innerHTML = '';
 
     try {
-        // URL for fetching trending videos from Redgifs
-        const apiUrl = `https://api.adultdatalink.com/redgifs/trending?parameter=gif`;
+        // Fetch trending videos from the Eporner API (no filters)
+        const apiUrl = 'https://api.adultdatalink.com/eporner/trending?parameter=video';
 
-        // If there's a keyword, add it as a filter (you can adjust this based on the actual API behavior)
-        const searchUrl = keyword ? `${apiUrl}&tags=${encodeURIComponent(keyword)}` : apiUrl;
-
-        // Fetch data from the API
-        const response = await fetch(searchUrl);
+        // Fetch the data from the API
+        const response = await fetch(apiUrl);
         const data = await response.json();
 
         if (data && data.length > 0) {
