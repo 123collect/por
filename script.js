@@ -1,26 +1,41 @@
-async function searchVideo() {
-    const videoUrl = document.getElementById('searchInput').value;
-    const videoContainer = document.getElementById('videoContainer');
+async function searchVideos() {
+    const keyword = document.getElementById('searchInput').value;
+    const videoResults = document.getElementById('videoResults');
 
-    if (!videoUrl) {
-        alert('Please enter a video URL!');
+    if (!keyword) {
+        alert('Please enter a search keyword!');
         return;
     }
 
     try {
-        // Replace this with your actual deployed backend URL
-        const response = await fetch(`https://your-backend-url/api/scrape?url=${encodeURIComponent(videoUrl)}`);
+        // API endpoint for searching videos based on the keyword
+        const apiUrl = `https://phub-api.herokuapp.com/search?keyword=${encodeURIComponent(keyword)}&limit=5`;
+        
+        // Fetch results from PHub API
+        const response = await fetch(apiUrl);
         const data = await response.json();
 
-        videoContainer.innerHTML = `
-            <h2>${data.title}</h2>
-            <p>Pornstars: ${data.pornstars.join(', ')}</p>
-            <h3>Download Links:</h3>
-            <ul>
-                ${data.download_urls.map(url => `<li><a href="${url}" target="_blank">${url}</a></li>`).join('')}
-            </ul>
-        `;
+        if (data && data.results) {
+            // Clear any previous results
+            videoResults.innerHTML = ''; 
+
+            // Loop through the results and create HTML to display them
+            data.results.forEach(result => {
+                const videoCard = document.createElement('div');
+                videoCard.classList.add('video-card');
+                videoCard.innerHTML = `
+                    <a href="${result.url}" target="_blank">
+                        <img src="${result.thumbnail}" alt="${result.title}" />
+                        <h3>${result.title}</h3>
+                    </a>
+                `;
+                videoResults.appendChild(videoCard);
+            });
+        } else {
+            videoResults.innerHTML = '<p>No results found!</p>';
+        }
     } catch (error) {
-        videoContainer.innerHTML = '<p>Error fetching video details. Please try again.</p>';
+        videoResults.innerHTML = '<p>Error fetching results. Please try again later.</p>';
+        console.error('Error fetching video data:', error);
     }
 }
