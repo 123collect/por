@@ -10,11 +10,10 @@ input, button {
     margin: 10px;
 }
 
-#videoContainer {
+#videoResults {
     margin-top: 20px;
 }
 
-a {
-    color: #00f;
-    text-decoration: none;
+video {
+    max-width: 100%;
 }
