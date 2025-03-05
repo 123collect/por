@@ -2,13 +2,15 @@ body {
     font-family: Arial, sans-serif;
     text-align: center;
     padding: 20px;
-    background-color: #f0f0f0;
+    background-color: #f9f9f9;
 }
 
-input, button {
+button {
     padding: 10px;
     font-size: 16px;
     margin: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }
 
 #videoResults {
@@ -42,4 +44,9 @@ input, button {
 .video-card a {
     color: #00f;
     text-decoration: none;
+}
+
+.video-card p {
+    font-size: 14px;
+    color: #777;
 }
